@@ -1200,36 +1200,67 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCount(products.length);
 
     // ============================================
-    // FEATURES VIDEO: autoplay on scroll (mobile)
+    // VIDEO PROMO POPUP: show twice per session
     // ============================================
-    const featuresVideo = document.getElementById('features-video');
-    const featuresVideoUnmute = document.getElementById('features-video-unmute');
+    const videoPopup = document.getElementById('video-popup');
+    const videoPopupBackdrop = document.getElementById('video-popup-backdrop');
+    const videoPopupClose = document.getElementById('video-popup-close');
+    const popupVideo = document.getElementById('popup-video');
 
-    if (featuresVideo) {
-        const videoObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    featuresVideo.play().catch(function() {
-                        // Autoplay blocked or not supported
-                    });
-                } else {
-                    featuresVideo.pause();
-                }
+    if (videoPopup && popupVideo) {
+        const SESSION_KEY = 'yes2health_video_popup';
+
+        function getPopupState() {
+            try {
+                return JSON.parse(sessionStorage.getItem(SESSION_KEY)) || { shown: 0, closed: false };
+            } catch (e) {
+                return { shown: 0, closed: false };
+            }
+        }
+
+        function setPopupState(state) {
+            try {
+                sessionStorage.setItem(SESSION_KEY, JSON.stringify(state));
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        function openVideoPopup() {
+            videoPopup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            popupVideo.currentTime = 0;
+            popupVideo.play().catch(function() {
+                // Autoplay may be blocked; video is visible and user can tap to play
             });
-        }, { threshold: 0.35 });
+        }
 
-        videoObserver.observe(featuresVideo);
-    }
+        function closeVideoPopup() {
+            videoPopup.classList.remove('active');
+            document.body.style.overflow = '';
+            popupVideo.pause();
+            const state = getPopupState();
+            state.closed = true;
+            setPopupState(state);
+        }
 
-    if (featuresVideo && featuresVideoUnmute) {
-        featuresVideoUnmute.addEventListener('click', function() {
-            const isMuted = featuresVideo.muted;
-            featuresVideo.muted = !isMuted;
-            featuresVideoUnmute.innerHTML = isMuted
-                ? '<i class="fa-solid fa-volume-high"></i>'
-                : '<i class="fa-solid fa-volume-xmark"></i>';
-            featuresVideoUnmute.setAttribute('aria-label', isMuted ? 'Mute video' : 'Unmute video');
-        });
+        function maybeShowVideoPopup() {
+            const state = getPopupState();
+            if (state.closed || state.shown >= 2) return;
+
+            state.shown += 1;
+            setPopupState(state);
+            openVideoPopup();
+        }
+
+        videoPopupClose.addEventListener('click', closeVideoPopup);
+        videoPopupBackdrop.addEventListener('click', closeVideoPopup);
+
+        // First show after 4 seconds
+        setTimeout(maybeShowVideoPopup, 4000);
+
+        // Second show after 60 seconds
+        setTimeout(maybeShowVideoPopup, 60000);
     }
 
     // ============================================
