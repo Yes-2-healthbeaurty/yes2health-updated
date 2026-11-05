@@ -4822,6 +4822,41 @@ section {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
+.filter-toggle {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 18px;
+    background: #171717;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.filter-toggle:hover {
+    background: #EF0000;
+}
+
+.filter-toggle > span {
+    flex: 1;
+    text-align: left;
+}
+
+.filter-toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.products-filter.expanded .filter-toggle-icon {
+    transform: rotate(180deg);
+}
+
 .products-filter form {
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 1fr auto auto;
@@ -5136,8 +5171,24 @@ section {
         align-items: flex-start;
         gap: 12px;
     }
+    .products-filter {
+        padding: 16px;
+    }
+    .filter-toggle {
+        display: flex;
+    }
     .products-filter form {
         grid-template-columns: 1fr;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        margin-top: 0;
+        transition: all 0.35s ease;
+    }
+    .products-filter.expanded form {
+        max-height: 800px;
+        opacity: 1;
+        margin-top: 16px;
     }
     .filter-button,
     .filter-reset {

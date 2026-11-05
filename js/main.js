@@ -1102,8 +1102,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const productsGrid = document.getElementById('products-grid');
     const productsCount = document.getElementById('products-count');
     const noResults = document.getElementById('products-no-results');
+    const filterToggle = document.getElementById('filter-toggle');
+    const productsFilter = document.querySelector('.products-filter');
 
     if (!filterForm || !productsGrid) return;
+
+    // Mobile filter toggle
+    if (filterToggle && productsFilter) {
+        filterToggle.addEventListener('click', function() {
+            const isExpanded = productsFilter.classList.toggle('expanded');
+            filterToggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+        });
+    }
 
     const products = Array.from(productsGrid.querySelectorAll('.product-card'));
 
