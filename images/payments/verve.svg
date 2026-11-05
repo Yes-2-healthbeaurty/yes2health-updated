@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 34" width="54" height="34" fill="none">
+    <rect x="0.5" y="0.5" width="53" height="33" rx="5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+    <g transform="translate(4.5, 7.5)">
+        <!-- Verve Red Orbital Accent -->
+        <path d="M4.5 12.5 C2.5 8.5 4.5 3.5 9 1.5 C13.5 -0.5 18 1.5 19.5 3.5 C16.5 2 12.5 2.5 9.5 5 C6.5 7.5 5.5 10.5 5.5 13 C5.5 14 5 13.5 4.5 12.5 Z" fill="#E31B23"/>
+        <circle cx="4" cy="12.5" r="2.5" fill="#E31B23"/>
+        <!-- Verve Typography -->
+        <text x="10" y="14.5" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" font-weight="900" font-style="italic" fill="#0F172A" letter-spacing="-0.5">verve</text>
+    </g>
+</svg>

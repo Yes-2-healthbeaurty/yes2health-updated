@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76 34" width="76" height="34" fill="none">
+    <rect x="0.5" y="0.5" width="75" height="33" rx="5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+    <g transform="translate(6, 4)">
+        <!-- Bank Building Icon -->
+        <path d="M12 4 L3.5 8.5 L20.5 8.5 Z" fill="#0F172A"/>
+        <rect x="4" y="9.5" width="16" height="1.6" rx="0.4" fill="#0F172A"/>
+        <rect x="5.5" y="11.5" width="2.2" height="7" rx="0.4" fill="#0F172A"/>
+        <rect x="10.9" y="11.5" width="2.2" height="7" rx="0.4" fill="#0F172A"/>
+        <rect x="16.3" y="11.5" width="2.2" height="7" rx="0.4" fill="#0F172A"/>
+        <rect x="3.5" y="19" width="17" height="2.2" rx="0.4" fill="#0F172A"/>
+        <!-- Instant Transfer Accent Arrow -->
+        <circle cx="19.5" cy="5.5" r="3.5" fill="#EF0000"/>
+        <path d="M18 5.5 L20 4 M18 5.5 L20 7 M18 5.5 L21.5 5.5" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <!-- Label Text -->
+    <text x="32" y="16" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="800" fill="#0F172A" letter-spacing="0.6">BANK</text>
+    <text x="32" y="24.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="6.8" font-weight="700" fill="#EF0000" letter-spacing="0.6">TRANSFER</text>
+</svg>
