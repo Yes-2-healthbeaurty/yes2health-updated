@@ -5,6 +5,21 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // ============================================
+    // PWA SERVICE WORKER REGISTRATION
+    // ============================================
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(function(registration) {
+                    console.log('ServiceWorker registered:', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('ServiceWorker registration failed:', error);
+                });
+        });
+    }
+
+    // ============================================
     // PRELOADER
     // ============================================
     const preloader = document.querySelector('.preloader');
@@ -139,86 +154,93 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ============================================
-    // TESTIMONIALS SLIDER
+    // CINZAL HERO SLIDER
     // ============================================
-    const testimonialTrack = document.getElementById('testimonials-track');
-    const testimonialPrev = document.getElementById('testimonial-prev');
-    const testimonialNext = document.getElementById('testimonial-next');
-    const testimonialDots = document.querySelectorAll('#testimonial-dots .slider-dot');
+    const cinzalTrack = document.getElementById('cinzal-track');
+    const cinzalPrev = document.getElementById('cinzal-prev');
+    const cinzalNext = document.getElementById('cinzal-next');
+    const cinzalDots = document.querySelectorAll('#cinzal-dots .cinzal-dot');
 
-    if (testimonialTrack) {
-        let testimonialIndex = 0;
-        const testimonialCards = testimonialTrack.querySelectorAll('.testimonial-card');
-        const totalTestimonials = testimonialCards.length;
+    if (cinzalTrack) {
+        let currentSlide = 0;
+        const slides = cinzalTrack.querySelectorAll('.cinzal-slide');
+        const totalSlides = slides.length;
+        let slideInterval;
 
-        function updateTestimonialSlider() {
-            testimonialTrack.style.transform = `translateX(-${testimonialIndex * 100}%)`;
-
-            // Update dots
-            testimonialDots.forEach(function(dot, index) {
-                dot.classList.toggle('active', index === testimonialIndex);
+        function updateSlide(index) {
+            currentSlide = (index + totalSlides) % totalSlides;
+            cinzalTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            cinzalDots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === currentSlide);
             });
         }
 
-        function nextTestimonial() {
-            testimonialIndex = (testimonialIndex + 1) % totalTestimonials;
-            updateTestimonialSlider();
+        function nextSlide() {
+            updateSlide(currentSlide + 1);
         }
 
-        function prevTestimonial() {
-            testimonialIndex = (testimonialIndex - 1 + totalTestimonials) % totalTestimonials;
-            updateTestimonialSlider();
+        function prevSlide() {
+            updateSlide(currentSlide - 1);
         }
 
-        if (testimonialNext) {
-            testimonialNext.addEventListener('click', nextTestimonial);
+        function startAutoplay() {
+            stopAutoplay();
+            slideInterval = setInterval(nextSlide, 5500);
         }
 
-        if (testimonialPrev) {
-            testimonialPrev.addEventListener('click', prevTestimonial);
+        function stopAutoplay() {
+            if (slideInterval) clearInterval(slideInterval);
         }
 
-        // Dot navigation
-        testimonialDots.forEach(function(dot) {
+        if (cinzalNext) {
+            cinzalNext.addEventListener('click', function() {
+                nextSlide();
+                startAutoplay();
+            });
+        }
+
+        if (cinzalPrev) {
+            cinzalPrev.addEventListener('click', function() {
+                prevSlide();
+                startAutoplay();
+            });
+        }
+
+        cinzalDots.forEach((dot) => {
             dot.addEventListener('click', function() {
-                testimonialIndex = parseInt(this.dataset.index);
-                updateTestimonialSlider();
+                const targetIdx = parseInt(this.getAttribute('data-slide'), 10);
+                updateSlide(targetIdx);
+                startAutoplay();
             });
         });
-
-        // Auto-slide testimonials
-        let testimonialAutoSlide = setInterval(nextTestimonial, 5000);
 
         // Pause on hover
-        testimonialTrack.addEventListener('mouseenter', function() {
-            clearInterval(testimonialAutoSlide);
-        });
+        const sliderWrapper = cinzalTrack.closest('.cinzal-hero-slider');
+        if (sliderWrapper) {
+            sliderWrapper.addEventListener('mouseenter', stopAutoplay);
+            sliderWrapper.addEventListener('mouseleave', startAutoplay);
+        }
 
-        testimonialTrack.addEventListener('mouseleave', function() {
-            testimonialAutoSlide = setInterval(nextTestimonial, 5000);
-        });
-
-        // Touch/Swipe support
+        // Mobile swipe support
         let touchStartX = 0;
         let touchEndX = 0;
 
-        testimonialTrack.addEventListener('touchstart', function(e) {
+        cinzalTrack.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
+            stopAutoplay();
         }, { passive: true });
 
-        testimonialTrack.addEventListener('touchend', function(e) {
+        cinzalTrack.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
+            if (touchStartX - touchEndX > 50) {
+                nextSlide();
+            } else if (touchEndX - touchStartX > 50) {
+                prevSlide();
+            }
+            startAutoplay();
         }, { passive: true });
 
-        function handleSwipe() {
-            const swipeThreshold = 50;
-            if (touchEndX < touchStartX - swipeThreshold) {
-                nextTestimonial();
-            } else if (touchEndX > touchStartX + swipeThreshold) {
-                prevTestimonial();
-            }
-        }
+        startAutoplay();
     }
 
     // ============================================
@@ -511,13 +533,13 @@ document.addEventListener('DOMContentLoaded', function() {
         right: 35px;
         width: 50px;
         height: 50px;
-        background: linear-gradient(135deg, #1a6b3c 0%, #0d4a29 100%);
+        background: linear-gradient(135deg, #d30000 0%, #EF0000 50%, #b80000 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        box-shadow: 0 8px 30px rgba(26, 107, 60, 0.4);
+        box-shadow: 0 8px 30px rgba(239, 0, 0, 0.4);
         z-index: 998;
         opacity: 0;
         visibility: hidden;
@@ -733,6 +755,9 @@ document.addEventListener('DOMContentLoaded', function() {
             totalPriceDisplay.style.display = 'none';
             purchasePriceInput.value = '';
         }
+        if (typeof updateCartCountBadge === 'function') {
+            updateCartCountBadge();
+        }
     }
 
     productCheckboxes.forEach((cb, index) => {
@@ -860,6 +885,57 @@ document.addEventListener('DOMContentLoaded', function() {
             closePurchaseModalFunc();
         }
     });
+
+    // ============================================
+    // HEADER CART LOGIC
+    // ============================================
+    const headerCartBtn = document.getElementById('header-cart-btn');
+    const cartCountBadge = document.getElementById('cart-count-badge');
+
+    function getCartCount() {
+        let count = 0;
+        productCheckboxes.forEach((cb, index) => {
+            if (cb.checked) {
+                const qtyInput = productQuantities[index];
+                const qty = parseInt(qtyInput ? qtyInput.value : 1, 10) || 1;
+                count += qty;
+            }
+        });
+        return count;
+    }
+
+    function updateCartCountBadge() {
+        if (!cartCountBadge) return;
+        const count = getCartCount();
+        cartCountBadge.textContent = count;
+        if (count > 0) {
+            cartCountBadge.style.transform = 'scale(1.2)';
+            setTimeout(() => { cartCountBadge.style.transform = 'scale(1)'; }, 200);
+        }
+    }
+
+    if (headerCartBtn) {
+        headerCartBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const count = getCartCount();
+            if (count === 0) {
+                // Cart is empty -> smoothly navigate directly to products list
+                const productsSection = document.getElementById('products');
+                if (productsSection) {
+                    productsSection.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    window.location.hash = '#products';
+                }
+            } else {
+                // Cart has items -> open purchase modal to view & complete checkout
+                openPurchaseModal(null);
+            }
+        });
+    }
+
+    // Initialize badge count
+    updateCartCountBadge();
+
     console.log('YES2HEALTH BEAUTY website initialized successfully!');
 });
 
@@ -917,3 +993,252 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+
+// ============================================
+// PRODUCT INFO TOOLTIP & MODAL
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const infoTriggers = document.querySelectorAll('.product-info-trigger');
+    const infoModal = document.getElementById('product-info-modal');
+    const infoBackdrop = document.getElementById('product-info-modal-backdrop');
+    const infoClose = document.getElementById('close-product-info-modal');
+    const infoImage = document.getElementById('product-info-image');
+    const infoCategory = document.getElementById('product-info-category');
+    const infoTitle = document.getElementById('product-info-title');
+    const infoDescription = document.getElementById('product-info-description');
+    const infoPrice = document.getElementById('product-info-price');
+    const infoOrder = document.getElementById('product-info-order');
+
+    if (!infoModal || infoTriggers.length === 0) return;
+
+    function openInfoModal(productName) {
+        const card = document.querySelector(`.product-card[data-name="${productName}"]`);
+        if (!card) return;
+
+        const image = card.querySelector('.product-image img');
+        const category = card.querySelector('.product-category');
+        const title = card.querySelector('h3');
+        const price = card.querySelector('.product-price');
+        const description = card.dataset.description || '';
+
+        if (image) {
+            infoImage.src = image.src;
+            infoImage.alt = image.alt;
+        }
+        infoCategory.textContent = category ? category.textContent : '';
+        infoTitle.textContent = title ? title.childNodes[title.childNodes.length - 1].textContent.trim() : productName;
+        infoDescription.textContent = description;
+        infoPrice.textContent = price ? price.textContent : '';
+        infoOrder.dataset.product = productName;
+        infoOrder.dataset.price = price ? price.textContent : '';
+
+        infoModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeInfoModal() {
+        infoModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    infoTriggers.forEach(function(trigger) {
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openInfoModal(this.dataset.product);
+        });
+    });
+
+    if (infoBackdrop) infoBackdrop.addEventListener('click', closeInfoModal);
+    if (infoClose) infoClose.addEventListener('click', closeInfoModal);
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && infoModal.classList.contains('active')) {
+            closeInfoModal();
+        }
+    });
+
+    // Order button inside modal triggers purchase modal
+    if (infoOrder) {
+        infoOrder.addEventListener('click', function() {
+            closeInfoModal();
+            // Trigger the existing purchase modal logic
+            setTimeout(function() {
+                if (typeof openPurchaseModal === 'function') {
+                    openPurchaseModal(infoOrder.dataset.product);
+                }
+            }, 300);
+        });
+    }
+});
+
+// ============================================
+// PRODUCT FILTERING & SORTING
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('product-filter-form');
+    const searchInput = document.getElementById('filter-search');
+    const categorySelect = document.getElementById('filter-category');
+    const minInput = document.getElementById('filter-min');
+    const maxInput = document.getElementById('filter-max');
+    const sortSelect = document.getElementById('sort-products');
+    const productsGrid = document.getElementById('products-grid');
+    const productsCount = document.getElementById('products-count');
+    const noResults = document.getElementById('products-no-results');
+
+    if (!filterForm || !productsGrid) return;
+
+    const products = Array.from(productsGrid.querySelectorAll('.product-card'));
+
+    function parsePrice(priceStr) {
+        return parseInt(priceStr, 10) || 0;
+    }
+
+    function formatPrice(price) {
+        return '₦' + price.toLocaleString('en-NG');
+    }
+
+    function updateCount(visible) {
+        const total = products.length;
+        if (visible === 0) {
+            productsCount.innerHTML = 'Showing <strong>0</strong> of <strong>' + total + ' products</strong>';
+            noResults.style.display = 'block';
+        } else {
+            productsCount.innerHTML = 'Showing <strong>1–' + visible + '</strong> of <strong>' + total + ' products</strong>';
+            noResults.style.display = 'none';
+        }
+    }
+
+    function sortProducts() {
+        const sortValue = sortSelect ? sortSelect.value : 'popular';
+        let sorted = [...products];
+
+        if (sortValue === 'price-asc') {
+            sorted.sort((a, b) => parsePrice(a.dataset.price) - parsePrice(b.dataset.price));
+        } else if (sortValue === 'price-desc') {
+            sorted.sort((a, b) => parsePrice(b.dataset.price) - parsePrice(a.dataset.price));
+        } else if (sortValue === 'newest') {
+            sorted.sort((a, b) => (b.dataset.badge === 'New' ? 1 : 0) - (a.dataset.badge === 'New' ? 1 : 0));
+        }
+
+        sorted.forEach(product => productsGrid.appendChild(product));
+    }
+
+    function filterProducts(e) {
+        if (e) e.preventDefault();
+
+        const search = searchInput.value.toLowerCase().trim();
+        const category = categorySelect.value.toLowerCase();
+        const minPrice = parseInt(minInput.value, 10) || 0;
+        const maxPrice = parseInt(maxInput.value, 10) || Infinity;
+
+        let visibleCount = 0;
+
+        products.forEach(product => {
+            const name = (product.dataset.name || '').toLowerCase();
+            const productCategory = (product.dataset.category || '').toLowerCase();
+            const price = parsePrice(product.dataset.price);
+
+            const matchesSearch = !search || name.includes(search);
+            const matchesCategory = !category || productCategory === category;
+            const matchesMin = price >= minPrice;
+            const matchesMax = price <= maxPrice;
+
+            if (matchesSearch && matchesCategory && matchesMin && matchesMax) {
+                product.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                product.classList.add('hidden');
+            }
+        });
+
+        sortProducts();
+        updateCount(visibleCount);
+    }
+
+    filterForm.addEventListener('submit', filterProducts);
+    filterForm.addEventListener('reset', function() {
+        setTimeout(() => {
+            filterProducts();
+        }, 10);
+    });
+
+    searchInput.addEventListener('input', filterProducts);
+    categorySelect.addEventListener('change', filterProducts);
+    minInput.addEventListener('input', filterProducts);
+    maxInput.addEventListener('input', filterProducts);
+    if (sortSelect) sortSelect.addEventListener('change', filterProducts);
+
+    // Initial state
+    updateCount(products.length);
+
+    // ============================================
+    // FLOATING APP BUG: reveal + sound after 4s
+    // ============================================
+    const appBug = document.getElementById('app-bug-float');
+
+    function playBugChirp() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.15);
+        } catch (err) {
+            // Audio play failed (often due to autoplay policy); silently ignore
+        }
+    }
+
+    if (appBug) {
+        setTimeout(function() {
+            appBug.classList.add('visible');
+            playBugChirp();
+        }, 4000);
+    }
+
+    // ============================================
+    // PWA APP INSTALL PROMPT (from floating bug)
+    // ============================================
+    let deferredInstallPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+    });
+
+    window.addEventListener('appinstalled', function() {
+        deferredInstallPrompt = null;
+        console.log('Yes2Health app was installed');
+    });
+
+    if (appBug) {
+        appBug.addEventListener('click', async function(e) {
+            if (!deferredInstallPrompt) {
+                // No install prompt available (already installed, file://, not installable, etc.)
+                e.preventDefault();
+                if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+                    alert('You are already using the Yes2Health app. Enjoy!');
+                } else {
+                    alert('To install the app:\n\nAndroid (Chrome): tap the menu (⋮) then "Add to Home screen"\niPhone (Safari): tap the share icon then "Add to Home Screen"\nWindows (Chrome/Edge): click the install icon in the address bar.\n\nNote: Install prompts only appear when the site is served over HTTPS or localhost, not from a file folder.');
+                }
+                return;
+            }
+
+            e.preventDefault();
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            }
+            deferredInstallPrompt = null;
+        });
+    }
+});
