@@ -693,10 +693,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const closeBtn = document.getElementById('close-video-modal');
         const backdrop = document.getElementById('video-modal-backdrop');
 
-        function openModal() {
+        function openModal(autoOpened) {
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            video.play();
+            video.muted = false;
+            video.play().catch(function() {
+                // Autoplay with sound may be blocked on non-user-initiated opens;
+                // controls remain visible so the user can tap play/unmute.
+            });
         }
 
         function closeModal() {
@@ -706,13 +710,39 @@ document.addEventListener('DOMContentLoaded', function() {
             video.currentTime = 0;
         }
 
-        openBtn.addEventListener('click', openModal);
-        closeBtn.addEventListener('click', closeModal);
-        backdrop.addEventListener('click', closeModal);
+        if (openBtn) openBtn.addEventListener('click', function() { openModal(false); });
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (backdrop) backdrop.addEventListener('click', closeModal);
 
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
         });
+
+        // Auto-show promo video twice per session
+        const PROMO_KEY = 'yes2health_video_promo';
+        function getPromoState() {
+            try {
+                return JSON.parse(sessionStorage.getItem(PROMO_KEY)) || { shown: 0 };
+            } catch (e) {
+                return { shown: 0 };
+            }
+        }
+        function setPromoState(state) {
+            try {
+                sessionStorage.setItem(PROMO_KEY, JSON.stringify(state));
+            } catch (e) {}
+        }
+
+        function maybeAutoOpen() {
+            const state = getPromoState();
+            if (state.shown >= 2 || modal.classList.contains('active')) return;
+            state.shown += 1;
+            setPromoState(state);
+            openModal(true);
+        }
+
+        setTimeout(maybeAutoOpen, 6000);
+        setTimeout(maybeAutoOpen, 60000);
     })();
 
     // ============================================
@@ -1233,108 +1263,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial state
     updateCount(products.length);
-
-    // ============================================
-    // VIDEO PROMO POPUP: show twice per session
-    // ============================================
-    const videoPopup = document.getElementById('video-popup');
-    const videoPopupBackdrop = document.getElementById('video-popup-backdrop');
-    const videoPopupClose = document.getElementById('video-popup-close');
-    const popupVideo = document.getElementById('popup-video');
-    const videoUnmuteBtn = document.getElementById('video-popup-unmute');
-
-    if (videoPopup && popupVideo) {
-        const SESSION_KEY = 'yes2health_video_popup';
-
-        function getPopupState() {
-            try {
-                return JSON.parse(sessionStorage.getItem(SESSION_KEY)) || { shown: 0, closed: false };
-            } catch (e) {
-                return { shown: 0, closed: false };
-            }
-        }
-
-        function setPopupState(state) {
-            try {
-                sessionStorage.setItem(SESSION_KEY, JSON.stringify(state));
-            } catch (e) {
-                // ignore
-            }
-        }
-
-        function openVideoPopup() {
-            videoPopup.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            popupVideo.currentTime = 0;
-
-            hideUnmuteButton();
-
-            // Try unmuted autoplay first
-            popupVideo.muted = false;
-            const playPromise = popupVideo.play();
-
-            if (playPromise !== undefined) {
-                playPromise.then(function() {
-                    // Unmuted autoplay succeeded
-                }).catch(function() {
-                    // Fallback: mute and play, then show unmute button
-                    popupVideo.muted = true;
-                    popupVideo.play().catch(function() {
-                        // Even muted autoplay blocked; user can tap video
-                    });
-                    showUnmuteButton();
-                });
-            }
-        }
-
-        function showUnmuteButton() {
-            if (videoUnmuteBtn) {
-                videoUnmuteBtn.classList.add('visible');
-            }
-        }
-
-        function hideUnmuteButton() {
-            if (videoUnmuteBtn) {
-                videoUnmuteBtn.classList.remove('visible');
-            }
-        }
-
-        if (videoUnmuteBtn) {
-            videoUnmuteBtn.addEventListener('click', function() {
-                popupVideo.muted = false;
-                popupVideo.play().catch(function() {});
-                hideUnmuteButton();
-            });
-        }
-
-        function closeVideoPopup() {
-            videoPopup.classList.remove('active');
-            document.body.style.overflow = '';
-            popupVideo.pause();
-            hideUnmuteButton();
-            const state = getPopupState();
-            state.closed = true;
-            setPopupState(state);
-        }
-
-        function maybeShowVideoPopup() {
-            const state = getPopupState();
-            if (state.closed || state.shown >= 2) return;
-
-            state.shown += 1;
-            setPopupState(state);
-            openVideoPopup();
-        }
-
-        videoPopupClose.addEventListener('click', closeVideoPopup);
-        videoPopupBackdrop.addEventListener('click', closeVideoPopup);
-
-        // First show after 6 seconds
-        setTimeout(maybeShowVideoPopup, 6000);
-
-        // Second show after 60 seconds
-        setTimeout(maybeShowVideoPopup, 60000);
-    }
 
     // ============================================
     // FLOATING APP BUG: reveal + sound after 4s
