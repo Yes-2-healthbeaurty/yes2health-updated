@@ -4232,11 +4232,11 @@ section {
 
 @media (min-width: 769px) {
     .video-popup-container {
-        max-width: 520px;
+        max-width: 380px;
     }
     .popup-video {
-        aspect-ratio: 16 / 9;
-        max-height: 70vh;
+        aspect-ratio: 9 / 16;
+        max-height: 80vh;
     }
 }
 
