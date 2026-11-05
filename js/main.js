@@ -1012,9 +1012,40 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// ============================================
-// PRODUCT INFO TOOLTIP & MODAL
-// ============================================
+    // ============================================
+    // PRODUCT INFO TOOLTIP: auto-show on scroll
+    // ============================================
+    const productCards = document.querySelectorAll('.y2h-products .product-card');
+
+    if (productCards.length > 0 && 'IntersectionObserver' in window) {
+        const shownTooltips = new Set();
+
+        const tooltipObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const trigger = card.querySelector('.product-info-trigger');
+                    if (trigger && !shownTooltips.has(trigger)) {
+                        shownTooltips.add(trigger);
+                        setTimeout(function() {
+                            trigger.classList.add('show-tooltip');
+                            setTimeout(function() {
+                                trigger.classList.remove('show-tooltip');
+                            }, 2200);
+                        }, 400);
+                    }
+                }
+            });
+        }, { threshold: 0.6, rootMargin: '0px 0px -10% 0px' });
+
+        productCards.forEach(function(card) {
+            tooltipObserver.observe(card);
+        });
+    }
+
+    // ============================================
+    // PRODUCT INFO MODAL
+    // ============================================
 document.addEventListener('DOMContentLoaded', function() {
     const infoTriggers = document.querySelectorAll('.product-info-trigger');
     const infoModal = document.getElementById('product-info-modal');

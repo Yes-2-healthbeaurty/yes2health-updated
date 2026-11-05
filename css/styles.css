@@ -4694,13 +4694,29 @@ section {
 .product-info-trigger {
     background: none;
     border: none;
-    color: #999;
-    font-size: 16px;
+    color: #EF0000;
+    font-size: 17px;
     cursor: pointer;
     padding: 0;
     margin-left: 6px;
     position: relative;
     transition: color 0.25s ease;
+    animation: info-icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes info-icon-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+.product-card:hover .product-info-trigger {
+    animation: info-icon-bounce 0.6s ease;
+}
+
+@keyframes info-icon-bounce {
+    0%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+    60% { transform: translateY(2px); }
 }
 
 .product-info-trigger:hover {
@@ -4713,8 +4729,8 @@ section {
     left: calc(100% + 10px);
     top: 50%;
     transform: translateY(-50%);
-    background: #f4f4f4;
-    color: #555;
+    background: #171717;
+    color: #ffffff;
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 11px;
@@ -4723,12 +4739,13 @@ section {
     opacity: 0;
     visibility: hidden;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e5e5e5;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 10;
 }
 
-.product-info-trigger:hover::after {
+.product-info-trigger:hover::after,
+.product-info-trigger.show-tooltip::after {
     opacity: 1;
     visibility: visible;
 }
