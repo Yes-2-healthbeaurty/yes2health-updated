@@ -53,28 +53,46 @@ document.addEventListener('DOMContentLoaded', function() {
     const navMenu = document.getElementById('nav-menu');
 
     if (menuToggle && navMenu) {
+        // Create menu backdrop
+        const menuBackdrop = document.createElement('div');
+        menuBackdrop.className = 'nav-menu-backdrop';
+        menuBackdrop.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(menuBackdrop);
+
+        function openMenu() {
+            menuToggle.classList.add('active');
+            navMenu.classList.add('active');
+            menuBackdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            menuToggle.classList.remove('active');
+            navMenu.classList.remove('active');
+            menuBackdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
         menuToggle.addEventListener('click', function() {
-            menuToggle.classList.toggle('active');
-            navMenu.classList.toggle('active');
-            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+            if (navMenu.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
         });
+
+        menuBackdrop.addEventListener('click', closeMenu);
 
         // Close menu when clicking on a link
         const navLinks = navMenu.querySelectorAll('a');
         navLinks.forEach(function(link) {
-            link.addEventListener('click', function() {
-                menuToggle.classList.remove('active');
-                navMenu.classList.remove('active');
-                document.body.style.overflow = '';
-            });
+            link.addEventListener('click', closeMenu);
         });
 
         // Close menu when clicking outside
         document.addEventListener('click', function(e) {
-            if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-                menuToggle.classList.remove('active');
-                navMenu.classList.remove('active');
-                document.body.style.overflow = '';
+            if (!navMenu.contains(e.target) && !menuToggle.contains(e.target) && !menuBackdrop.contains(e.target)) {
+                closeMenu();
             }
         });
     }

@@ -652,6 +652,10 @@ section {
     position: relative;
 }
 
+.cinzal-slide-1 {
+    background: url('../images/brand/guide_img_7.jpg') no-repeat 115% center/65% auto, linear-gradient(135deg, #d30000 0%, #EF0000 50%, #b80000 100%);
+}
+
 .cinzal-slide-inner {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
@@ -1497,7 +1501,7 @@ section {
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 35px;
 }
 
@@ -2905,6 +2909,15 @@ section {
         padding: 0 1.5rem;
     }
 
+    .cinzal-slide::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.35) 100%);
+        z-index: 0;
+        pointer-events: none;
+    }
+
     .section-header {
         margin-bottom: 50px;
     }
@@ -2914,39 +2927,89 @@ section {
     }
 
     .cinzal-hero {
-        padding-top: 75px;
+        padding-top: 70px;
         min-height: auto;
     }
 
     .cinzal-slide {
-        padding: 75px 0 55px;
+        padding: 70px 0 60px;
+        text-align: center;
+    }
+
+    .cinzal-slide-1 {
+        background: url('../images/brand/guide_img_7.jpg') no-repeat 120% center/55% auto, linear-gradient(135deg, #d30000 0%, #EF0000 50%, #b80000 100%);
     }
 
     .cinzal-slide-inner {
         grid-template-columns: 1fr;
-        gap: 35px;
-        text-align: center;
+        gap: 30px;
     }
 
     .slide-content {
         margin: 0 auto;
+        padding: 0 10px;
+    }
+
+    .slide-title {
+        font-size: clamp(1.9rem, 7vw, 2.8rem);
+        line-height: 1.2;
+        margin-bottom: 16px;
+    }
+
+    .slide-desc {
+        font-size: 1rem;
+        line-height: 1.65;
+        margin-bottom: 28px;
     }
 
     .slide-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .btn-slider-buy,
+    .btn-slider-secondary {
+        width: 100%;
         justify-content: center;
+        padding: 15px 24px;
+        font-size: 0.9rem;
+        min-height: 50px;
     }
 
     .slide-visual-card img {
-        height: 320px;
+        height: 280px;
     }
 
     .slider-arrow-btn {
-        width: 38px;
-        height: 38px;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
     }
 
-    .slider-arrow-btn.prev-btn { left: 8px; }
-    .slider-arrow-btn.next-btn { right: 8px; }
+    .slider-arrow-btn svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .slider-arrow-btn.prev-btn { left: 12px; }
+    .slider-arrow-btn.next-btn { right: 12px; }
+
+    .cinzal-dots {
+        bottom: 18px;
+        gap: 10px;
+    }
+
+    .cinzal-dot {
+        width: 10px;
+        height: 10px;
+        min-width: 10px;
+        min-height: 10px;
+    }
 
     .header-logo img {
         height: 34px;
@@ -2976,10 +3039,27 @@ section {
         padding: 50px;
         transition: var(--transition);
         box-shadow: var(--shadow-xl);
+        z-index: 1001;
     }
 
     .nav-menu.active {
         right: 0;
+    }
+
+    .nav-menu-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(3px);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .nav-menu-backdrop.active {
+        opacity: 1;
+        visibility: visible;
     }
 
     .nav-menu a {
@@ -3159,9 +3239,141 @@ section {
 
     .whatsapp-float {
         bottom: 20px;
-        right: 20px;
+        left: 20px;
+        right: auto;
         width: 58px;
         height: 58px;
+    }
+
+    .app-bug-float {
+        bottom: 20px;
+        top: auto;
+        right: 18px;
+        animation: none;
+    }
+
+    .app-bug-icon {
+        animation: bug-wiggle 0.35s ease-in-out infinite alternate;
+    }
+
+    .cinzal-slide {
+        padding: 55px 0 50px;
+    }
+
+    .cinzal-slide-1 {
+        background: url('../images/brand/guide_img_7.jpg') no-repeat 125% bottom/50% auto, linear-gradient(135deg, #d30000 0%, #EF0000 50%, #b80000 100%);
+    }
+
+    .products-grid.y2h-products {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .y2h-products .product-image {
+        height: 200px;
+    }
+
+    .y2h-products .product-details h3 {
+        font-size: 16px;
+    }
+
+    .y2h-products .cart-button {
+        font-size: 13px;
+    }
+
+    .purchase-modal-container {
+        width: 95%;
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+
+    .modal-header-classic h3 {
+        font-size: 1.5rem !important;
+    }
+
+    .modal-header-classic p {
+        font-size: 0.85rem;
+    }
+
+    .purchase-modal-inner .form-group input,
+    .purchase-modal-inner .form-group textarea {
+        padding: 1rem 1.125rem;
+        font-size: 16px;
+    }
+
+    .purchase-modal-inner .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .purchase-modal-inner label {
+        font-size: 0.88rem;
+    }
+
+    .product-dropdown-header {
+        padding: 12px;
+    }
+
+    .checkbox-group > div {
+        padding: 10px 0;
+    }
+
+    .checkbox-group label {
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+
+    .product-qty {
+        width: 56px;
+        padding: 6px;
+        font-size: 0.9rem;
+    }
+
+    .slide-content {
+        padding: 0 6px;
+    }
+
+    .slide-title {
+        font-size: clamp(1.65rem, 8vw, 2.1rem);
+        margin-bottom: 12px;
+    }
+
+    .slide-desc {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        margin-bottom: 22px;
+    }
+
+    .slide-actions {
+        gap: 12px;
+        max-width: 100%;
+    }
+
+    .btn-slider-buy,
+    .btn-slider-secondary {
+        padding: 14px 20px;
+        font-size: 0.85rem;
+        min-height: 48px;
+    }
+
+    .slider-arrow-btn {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    .slider-arrow-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .slider-arrow-btn.prev-btn { left: 8px; }
+    .slider-arrow-btn.next-btn { right: 8px; }
+
+    .cinzal-dots {
+        bottom: 14px;
+        gap: 8px;
     }
 
     .section-subtitle::before,
@@ -4638,7 +4850,7 @@ section {
     border-radius: 10px;
     background: #fafafa;
     font-family: 'Poppins', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     color: #171717;
     outline: none;
     transition: all 0.25s ease;
@@ -4951,5 +5163,16 @@ section {
         width: 100%;
         padding: 10px;
         font-size: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
