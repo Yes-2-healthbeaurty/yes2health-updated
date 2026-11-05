@@ -3031,15 +3031,16 @@ section {
         top: 0;
         right: -100%;
         width: 85%;
-        max-width: 380px;
+        max-width: 340px;
         height: 100vh;
-        background: var(--white);
+        background: #ffffff;
         flex-direction: column;
         justify-content: center;
-        padding: 50px;
+        padding: 80px 35px;
         transition: var(--transition);
-        box-shadow: var(--shadow-xl);
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.18);
         z-index: 1001;
+        border-left: 1px solid rgba(0, 0, 0, 0.06);
     }
 
     .nav-menu.active {
@@ -3049,8 +3050,7 @@ section {
     .nav-menu-backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.55);
-        backdrop-filter: blur(3px);
+        background: rgba(0, 0, 0, 0.4);
         z-index: 1000;
         opacity: 0;
         visibility: hidden;
@@ -3063,9 +3063,15 @@ section {
     }
 
     .nav-menu a {
-        color: var(--text-dark);
-        font-size: 1.15rem;
-        padding: 12px 0;
+        color: #171717;
+        font-size: 1.25rem;
+        font-weight: 700;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .nav-menu a:last-of-type {
+        border-bottom: none;
     }
 
     .menu-toggle {
