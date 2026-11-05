@@ -5171,9 +5171,30 @@ section {
         align-items: flex-start;
         gap: 12px;
     }
-    .products-filter {
+    .products > .container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .products > .container > .section-header {
+        order: 0;
+    }
+
+    .products > .container > .products-toolbar {
+        order: 1;
+    }
+
+    .products > .container > .products-grid {
+        order: 2;
+    }
+
+    .products > .container > .products-filter {
+        order: 3;
+        margin-top: 24px;
+        margin-bottom: 0;
         padding: 16px;
     }
+
     .filter-toggle {
         display: flex;
     }
