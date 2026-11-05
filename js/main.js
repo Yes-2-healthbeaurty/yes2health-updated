@@ -1287,8 +1287,8 @@ document.addEventListener('DOMContentLoaded', function() {
         videoPopupClose.addEventListener('click', closeVideoPopup);
         videoPopupBackdrop.addEventListener('click', closeVideoPopup);
 
-        // First show after 4 seconds
-        setTimeout(maybeShowVideoPopup, 4000);
+        // First show after 6 seconds
+        setTimeout(maybeShowVideoPopup, 6000);
 
         // Second show after 60 seconds
         setTimeout(maybeShowVideoPopup, 60000);
