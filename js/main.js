@@ -1013,7 +1013,7 @@ if ('serviceWorker' in navigator) {
 }
 
     // ============================================
-    // PRODUCT INFO TOOLTIP: auto-show on scroll
+    // PRODUCT INFO TOOLTIP: auto-show with persistent ripple on scroll
     // ============================================
     const productCards = document.querySelectorAll('.y2h-products .product-card');
 
@@ -1029,9 +1029,6 @@ if ('serviceWorker' in navigator) {
                         shownTooltips.add(trigger);
                         setTimeout(function() {
                             trigger.classList.add('show-tooltip');
-                            setTimeout(function() {
-                                trigger.classList.remove('show-tooltip');
-                            }, 2200);
                         }, 400);
                     }
                 }
@@ -1040,6 +1037,13 @@ if ('serviceWorker' in navigator) {
 
         productCards.forEach(function(card) {
             tooltipObserver.observe(card);
+        });
+
+        // Remove persistent tooltip ripple on click
+        document.querySelectorAll('.product-info-trigger').forEach(function(trigger) {
+            trigger.addEventListener('click', function() {
+                trigger.classList.remove('show-tooltip');
+            });
         });
     }
 
