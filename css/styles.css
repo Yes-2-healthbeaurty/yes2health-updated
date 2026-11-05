@@ -4113,6 +4113,48 @@ section {
     line-height: 1.4;
 }
 
+/* Mobile feature video */
+.features-video-wrapper {
+    display: none;
+    position: relative;
+    margin-top: 28px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.features-video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    display: block;
+    object-fit: cover;
+}
+
+.features-video-unmute {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    color: #171717;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.25s ease;
+}
+
+.features-video-unmute:hover {
+    background: #ffffff;
+    transform: scale(1.1);
+}
+
 /* 2. Brand Guidelines Philosophy & Pillars */
 .about-lead {
     font-size: 1.15rem;
@@ -4258,6 +4300,13 @@ section {
     .cinzal-features-grid {
         grid-template-columns: 1fr;
         gap: 12px;
+    }
+    .features-video-wrapper {
+        display: block;
+    }
+    .features-video {
+        aspect-ratio: 9 / 16;
+        max-height: 70vh;
     }
     .brand-pillars-cards {
         grid-template-columns: 1fr;
@@ -5180,17 +5229,19 @@ section {
         order: 0;
     }
 
-    .products > .container > .products-toolbar {
+    .products > .container > .products-grid {
         order: 1;
     }
 
-    .products > .container > .products-grid {
+    .products > .container > .products-toolbar {
         order: 2;
+        margin-top: 24px;
+        margin-bottom: 0;
     }
 
     .products > .container > .products-filter {
         order: 3;
-        margin-top: 24px;
+        margin-top: 16px;
         margin-bottom: 0;
         padding: 16px;
     }

@@ -1200,6 +1200,39 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCount(products.length);
 
     // ============================================
+    // FEATURES VIDEO: autoplay on scroll (mobile)
+    // ============================================
+    const featuresVideo = document.getElementById('features-video');
+    const featuresVideoUnmute = document.getElementById('features-video-unmute');
+
+    if (featuresVideo) {
+        const videoObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    featuresVideo.play().catch(function() {
+                        // Autoplay blocked or not supported
+                    });
+                } else {
+                    featuresVideo.pause();
+                }
+            });
+        }, { threshold: 0.35 });
+
+        videoObserver.observe(featuresVideo);
+    }
+
+    if (featuresVideo && featuresVideoUnmute) {
+        featuresVideoUnmute.addEventListener('click', function() {
+            const isMuted = featuresVideo.muted;
+            featuresVideo.muted = !isMuted;
+            featuresVideoUnmute.innerHTML = isMuted
+                ? '<i class="fa-solid fa-volume-high"></i>'
+                : '<i class="fa-solid fa-volume-xmark"></i>';
+            featuresVideoUnmute.setAttribute('aria-label', isMuted ? 'Mute video' : 'Unmute video');
+        });
+    }
+
+    // ============================================
     // FLOATING APP BUG: reveal + sound after 4s
     // ============================================
     const appBug = document.getElementById('app-bug-float');
