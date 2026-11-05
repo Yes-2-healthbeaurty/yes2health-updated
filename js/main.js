@@ -1237,6 +1237,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const videoPopupBackdrop = document.getElementById('video-popup-backdrop');
     const videoPopupClose = document.getElementById('video-popup-close');
     const popupVideo = document.getElementById('popup-video');
+    const videoUnmuteBtn = document.getElementById('video-popup-unmute');
 
     if (videoPopup && popupVideo) {
         const SESSION_KEY = 'yes2health_video_popup';
@@ -1261,8 +1262,44 @@ document.addEventListener('DOMContentLoaded', function() {
             videoPopup.classList.add('active');
             document.body.style.overflow = 'hidden';
             popupVideo.currentTime = 0;
-            popupVideo.play().catch(function() {
-                // Autoplay may be blocked; video is visible and user can tap to play
+
+            hideUnmuteButton();
+
+            // Try unmuted autoplay first
+            popupVideo.muted = false;
+            const playPromise = popupVideo.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(function() {
+                    // Unmuted autoplay succeeded
+                }).catch(function() {
+                    // Fallback: mute and play, then show unmute button
+                    popupVideo.muted = true;
+                    popupVideo.play().catch(function() {
+                        // Even muted autoplay blocked; user can tap video
+                    });
+                    showUnmuteButton();
+                });
+            }
+        }
+
+        function showUnmuteButton() {
+            if (videoUnmuteBtn) {
+                videoUnmuteBtn.classList.add('visible');
+            }
+        }
+
+        function hideUnmuteButton() {
+            if (videoUnmuteBtn) {
+                videoUnmuteBtn.classList.remove('visible');
+            }
+        }
+
+        if (videoUnmuteBtn) {
+            videoUnmuteBtn.addEventListener('click', function() {
+                popupVideo.muted = false;
+                popupVideo.play().catch(function() {});
+                hideUnmuteButton();
             });
         }
 
@@ -1270,6 +1307,7 @@ document.addEventListener('DOMContentLoaded', function() {
             videoPopup.classList.remove('active');
             document.body.style.overflow = '';
             popupVideo.pause();
+            hideUnmuteButton();
             const state = getPopupState();
             state.closed = true;
             setPopupState(state);

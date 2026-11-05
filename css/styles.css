@@ -4196,6 +4196,40 @@ section {
     background: #000;
 }
 
+.video-popup-unmute {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: #EF0000;
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 3;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    animation: unmute-pulse 1.5s ease-in-out infinite;
+}
+
+.video-popup-unmute.visible {
+    display: inline-flex;
+}
+
+.video-popup-unmute:hover {
+    background: #b80000;
+}
+
+@keyframes unmute-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.06); }
+}
+
 @media (min-width: 769px) {
     .video-popup-container {
         max-width: 520px;
